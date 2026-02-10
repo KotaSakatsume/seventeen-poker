@@ -1,0 +1,17 @@
+# Object files
+*.o
+*.obj
+
+# Binary
+17poker
+test_runner
+a.out
+
+# Editor configs
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Debug
+*.dSYM/
