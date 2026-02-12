@@ -1,30 +1,18 @@
 #include <iostream>
-#include "../include/poker.hpp"
+#include <ctime>
+#include "../include/game.hpp"
 
 int main() {
-    std::cout << "=== 17 Poker Engine Test ===" << std::endl;
+    // 乱数初期化（これをしないと毎回同じカードになる）
+    std::srand(std::time(nullptr));
 
-    // 1. 山札の生成
-    Poker::Deck deck;
-    std::cout << "[Init] Deck size: " << deck.size() << " (Expected: 17)" << std::endl;
+    std::cout << "==================================" << std::endl;
+    std::cout << "      WELCOME TO 17 POKER         " << std::endl;
+    std::cout << "==================================" << std::endl;
 
-    // 2. 生成直後の並びを表示（ソートされているはず）
-    std::cout << "Original: ";
-    deck.printAll();
-
-    // 3. シャッフル
-    deck.shuffle();
-    std::cout << "Shuffled: ";
-    deck.printAll();
-
-    // 4. 全部引いてみる
-    std::cout << "\nDrawing all cards..." << std::endl;
-    int count = 0;
-    while (!deck.isEmpty()) {
-        Poker::Card c = deck.draw();
-        std::cout << "[" << count + 1 << "] " << c.toString() << std::endl;
-        count++;
-    }
+    // 所持金1000チップでスタート
+    Poker::Game game(1000);
+    game.run();
 
     return 0;
 }
