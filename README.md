@@ -35,7 +35,10 @@ C++で実装されたゲームロジックをWebAssembly (Emscripten) を使用�
 
 *   **言語:** C++ (C++17)
 *   **ビルド:** Emscripten (WebAssembly)
+    *   **Embind:** C++のクラスや関数をJavaScriptから利用するために使用
 *   **フロントエンド:** HTML5, JavaScript
+*   **アルゴリズム:** モンテカルロ法 (CPUの思考ロジック)
+*   **ホスティング:** GitHub Pages
 
 ## ビルド方法 (開発者向け)
 
