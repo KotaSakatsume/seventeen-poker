@@ -1,26 +1,54 @@
-# seventeen-poker# 17 Poker Engine 🃏
+# 17 Poker (Seventeen Poker)
 
-![Build Status](https://img.shields.io/badge/build-pending-yellow) ![License](https://img.shields.io/badge/license-MIT-blue)
-![Language](https://img.shields.io/badge/language-C%2B%2B17-orange)
+17枚のカードだけで遊ぶ、シンプルかつ奥深いポーカーゲームです。
+C++で実装されたゲームロジックをWebAssembly (Emscripten) を使用してブラウザ上で動作させています。
 
-## 📖 Overview (概要)
-**「17ポーカー（Seventeen Poker）」** のための高速なゲームエンジンおよび対戦シミュレーターです。
-C++17を用いた厳密なクラス設計、ビット演算を考慮した役判定アルゴリズム、および拡張性のあるアーキテクチャを採用しています。
+🎮 **[ブラウザで遊ぶ](https://kotasakatsume.github.io/seventeen-poker/)**
 
-本プロジェクトは、ソフトウェアエンジニアリングの実践（Design Patterns, TDD, CI/CD）を目的として開発されています。
+## 🃏 ゲームのルール
 
-## 🚀 Key Features (特徴)
-* **Optimized Hand Evaluator:** ジョーカー（ワイルドカード）を含む全パターンの役判定を高速に処理。
-* **Strategy Engine:** ミニマックス法や期待値計算に基づいたCPU思考ルーチン（実装予定）。
-* **Modern C++:** スマートポインタや`std::optional`などを活用した安全なメモリ管理。
+通常のポーカーとは異なり、以下の**17枚のカードのみ**を使用します。カードカウンティングや確率計算が重要な戦略的ゲームです。
 
-## 🛠 Requirements (必須環境)
-* C++ Compiler (Create/Clang/GCC) supporting **C++17**
-* Make
+*   **使用カード:** スペード・ハート・ダイヤ・クラブの **A, K, Q, J** (計16枚) + **Joker** (1枚)
+*   **手札:** 5枚
+*   **ジョーカー:** どのカードの代わりにもなる最強のワイルドカードです。
 
-## 📦 Build & Run (ビルドと実行)
+### 役の強さ (強い順)
+1.  **Five of a Kind** (ファイブカード) - ジョーカーを含めて同じランクが5枚
+2.  **Royal Straight Flush** (ロイヤルストレートフラッシュ)
+3.  **Four of a Kind** (フォーカード)
+4.  **Full House** (フルハウス)
+5.  **Straight** (ストレート)
+6.  **Three of a Kind** (スリーカード)
+7.  **Two Pair** (ツーペア)
+8.  **One Pair** (ワンペア)
+9.  **High Card** (ハイカード)
 
-### 1. クローンと移動
+## 🤖 特徴
+
+*   **思考するCPU:**
+    CPUはモンテカルロシミュレーションを実装しています。配られた手札から「どのカードを残せば勝率が最大になるか」をリアルタイムに数百回の試行を行って判断し、最適な交換を行います。
+*   **WebAssembly:**
+    C++で書かれたロジックをそのままブラウザで動かしているため、複雑な確率計算も高速に処理されます。
+
+## 🛠️ 技術スタック
+
+*   **言語:** C++ (C++17)
+*   **ビルド:** Emscripten (WebAssembly)
+*   **フロントエンド:** HTML5, JavaScript
+
+## ビルド方法 (開発者向け)
+
+Emscripten環境にて以下のコマンドでビルドできます。
+
 ```bash
-git clone [https://github.com/your-username/17poker-engine.git](https://github.com/your-username/17poker-engine.git)
-cd 17poker-engine
+emcc src/game.cpp src/deck.cpp src/hand.cpp src/card.cpp src/bindings.cpp \
+  -I include \
+  -o docs/poker.js \
+  -s WASM=1 \
+  -s ALLOW_MEMORY_GROWTH=1 \
+  -s MODULARIZE=1 \
+  -s EXPORT_NAME="createPokerModule" \
+  --bind \
+  -O3
+```
