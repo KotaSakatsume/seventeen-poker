@@ -30,3 +30,8 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
+# テスト実行用のルール
+test:
+	$(CXX) $(CXXFLAGS) -Iinclude src/card.cpp src/deck.cpp src/hand.cpp tests/test_hand.cpp -o test_runner
+	./test_runner
