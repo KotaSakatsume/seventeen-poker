@@ -1,46 +1,49 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "poker.hpp"
 #include <vector>
+#include <string>
+#include "poker.hpp"
 
 namespace Poker {
 
-    // プレイヤーの状態
-    struct Player {
-        std::string name;
-        int chips;
-        std::vector<Card> hand;
-        bool isFolded;
+enum class GamePhase { INIT, BETTING_1, EXCHANGE, BETTING_2, SHOWDOWN, GAME_OVER };
 
-        // コンストラクタは2引数（isFoldedは初期化リストでfalseに）
-        Player(std::string n, int c) : name(n), chips(c), isFolded(false) {}
-    };
+struct GameState {
+    int playerChips;
+    int cpuChips;
+    int pot;
+    std::string message;
+    GamePhase phase;
+    std::vector<int> playerHand;
+    std::vector<int> cpuHand;
+};
 
-    // ゲーム進行クラス
-    class Game {
-    private:
-        Deck deck;
-        Player user;
-        Player cpu;
-        int pot;
-        
-        // ★追加: ユーザーが主導権（交換の優先権）を持っているか？
-        bool userHasInitiative; 
+class Game {
+public:
+    Game();
+    void init();
+    void processAction(int input, const std::vector<int>& input_arr = {});
+    GameState getState() const;
 
-    public:
-        Game(int startChips);
-        void run();
+private:
+    Deck deck;
+    std::vector<Card> playerHand;
+    std::vector<Card> cpuHand;
+    
+    int playerChips;
+    int cpuChips;
+    int pot;
+    GamePhase phase;
+    std::string currentMessage;
 
-    private:
-        void startRound();
-        void bettingPhase(int round);
-        void exchangePhase();       // ここで主導権ロジックを使う
-        void showdown();
-        
-        int askCpuAction(int currentBet, int toCall);
-        int getUserInput(int min, int max);
-    };
+    void dealInitialCards();
+    void determineWinner();
+
+    // ★追加: CPUの頭脳
+    void cpuExchangeTurn(); // 最適な交換を行う
+    double calculateWinRate(const std::vector<Card>& currentHand, const std::vector<int>& keepIndices);
+};
 
 } // namespace Poker
 
