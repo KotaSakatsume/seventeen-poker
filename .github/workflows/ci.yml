@@ -1,0 +1,29 @@
+name: C++ CI (Build & Test)
+
+# いつ実行するか：mainへのプッシュ または プルリクエスト
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest  # クラウド上のLinux環境で実行
+
+    steps:
+    # 1. リポジトリのコードをチェックアウト（ダウンロード）
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2. コンパイラの確認（Ubuntuには最初からg++が入っている）
+    - name: Check Compiler
+      run: g++ --version
+
+    # 3. ゲーム本体のビルド確認
+    - name: Build Game
+      run: make
+
+    # 4. テストのコンパイルと実行
+    - name: Run Tests
+      run: make test
